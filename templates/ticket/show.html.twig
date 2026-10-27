@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block title %}#{{ ticket.id }} {{ ticket.title }}{% endblock %}
+{% block body %}
+<p><a href="{{ path('app_ticket_index') }}">← All tickets</a></p>
+<div class="card">
+    <h1>#{{ ticket.id }} {{ ticket.title }}</h1>
+    <p>
+        <span class="badge {{ ticket.status.value }}">{{ ticket.status.label }}</span>
+        <span class="badge {{ ticket.priority.value }}">{{ ticket.priority.label }}</span>
+        {% if ticket.overdue %}<span class="badge overdue">SLA breached</span>{% endif %}
+    </p>
+    <p class="muted">Opened by {{ ticket.requester.name }} on {{ ticket.createdAt|date('d M Y H:i') }} · Assigned to {{ ticket.assignee ? ticket.assignee.name : 'nobody yet' }}
+        {% if ticket.responseDueAt %} · First reply due {{ ticket.responseDueAt|date('d M H:i') }}{% endif %}</p>
+    <p style="white-space:pre-wrap">{{ ticket.description }}</p>
+
+    {% if transitions or agents %}
+    <div class="actions">
+        {% for tr in transitions %}
+            <form class="inline" method="post" action="{{ path('app_ticket_transition', {id: ticket.id, transition: tr}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('transition' ~ ticket.id) }}">
+                <button class="secondary" type="submit">{{ tr|replace({'_': ' '})|capitalize }}</button>
+            </form>
+        {% endfor %}
+        {% if agents %}
+            <form class="inline actions" method="post" action="{{ path('app_ticket_assign', {id: ticket.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('assign' ~ ticket.id) }}">
+                <select name="assignee" aria-label="Assignee" style="width:auto">
+                    <option value="0">Unassigned</option>
+                    {% for a in agents %}<option value="{{ a.id }}" {{ ticket.assignee == a ? 'selected' }}>{{ a.name }}</option>{% endfor %}
+                </select>
+                <button class="secondary" type="submit">Assign</button>
+            </form>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Conversation</h2>
+    {% for c in comments %}
+        <div class="comment {{ c.internal ? 'internal' }}">
+            <b>{{ c.author.name }}</b> {% if c.internal %}<span class="badge">internal</span>{% endif %}
+            <span class="muted">{{ c.createdAt|date('d M H:i') }}</span>
+            <div style="white-space:pre-wrap">{{ c.body }}</div>
+        </div>
+    {% else %}
+        <p class="muted">No replies yet.</p>
+    {% endfor %}
+
+    {% if commentForm %}
+        {{ form_start(commentForm) }}
+            {{ form_row(commentForm.body) }}
+            {% if commentForm.internal is defined %}{{ form_row(commentForm.internal) }}{% endif %}
+            {{ form_rest(commentForm) }}
+            <button type="submit">Send</button>
+        {{ form_end(commentForm) }}
+    {% else %}
+        <p class="muted">This ticket is closed to new replies. Reopen it to continue.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+/vendor
+/var
+/tests
+/docker
+/docs
+/.github
+.env.local
+.env.*.local
+compose*.yaml
+Makefile

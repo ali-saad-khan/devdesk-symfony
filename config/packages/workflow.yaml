@@ -1,0 +1,30 @@
+framework:
+    workflows:
+        ticket_status:
+            type: state_machine
+            audit_trail:
+                enabled: '%kernel.debug%'
+            marking_store:
+                type: method
+                property: status
+            supports:
+                - App\Entity\Ticket
+            initial_marking: open
+            places:
+                - open
+                - in_progress
+                - resolved
+                - closed
+            transitions:
+                start:
+                    from: open
+                    to: in_progress
+                resolve:
+                    from: [open, in_progress]
+                    to: resolved
+                close:
+                    from: resolved
+                    to: closed
+                reopen:
+                    from: [resolved, closed]
+                    to: open

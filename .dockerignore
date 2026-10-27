@@ -1,0 +1,11 @@
+.git
+.github
+var
+vendor
+tests
+docs
+.env.local
+.env.*.local
+compose*.yaml
+Makefile
+node_modules

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}Tickets{% endblock %}
+{% block body %}
+<h1>Tickets</h1>
+<form class="filters" method="get" role="search">
+    <input type="search" name="q" value="{{ q }}" placeholder="Search title or description" aria-label="Search">
+    <select name="status" aria-label="Status">
+        <option value="">All statuses</option>
+        {% for s in statuses %}<option value="{{ s.value }}" {{ status == s ? 'selected' }}>{{ s.label }}</option>{% endfor %}
+    </select>
+    <button type="submit" class="secondary">Filter</button>
+</form>
+<div class="card">{% include 'ticket/_table.html.twig' %}</div>
+{% endblock %}

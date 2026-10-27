@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}New ticket{% endblock %}
+{% block body %}
+<h1>Open a ticket</h1>
+<div class="card">
+    {{ form_start(form) }}
+        {% for field in [form.title, form.description, form.priority] %}
+            <div class="row">{{ form_label(field) }}{{ form_widget(field) }}<div class="form-error">{{ form_errors(field) }}</div></div>
+        {% endfor %}
+        {{ form_rest(form) }}
+        <button type="submit">Submit ticket</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

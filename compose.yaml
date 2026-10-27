@@ -1,0 +1,40 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /app
+    volumes:
+      - .:/app
+      - composer-cache:/tmp/composer
+    environment:
+      COMPOSER_HOME: /tmp/composer
+      DATABASE_URL: postgresql://devdesk:devdesk@database:5432/devdesk?serverVersion=16&charset=utf8
+      MAILER_DSN: smtp://mailer:1025
+    ports:
+      - "8080:8000"
+    command: php -S 0.0.0.0:8000 -t public
+    depends_on:
+      database:
+        condition: service_healthy
+      mailer:
+        condition: service_started
+
+  database:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: devdesk
+      POSTGRES_PASSWORD: devdesk
+      POSTGRES_DB: devdesk
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devdesk"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  db-data:
+  composer-cache:

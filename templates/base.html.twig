@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}DevDesk{% endblock %} · DevDesk</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎫</text></svg>">
+    <style>{{ source('@styles/app.css') }}</style>
+</head>
+<body>
+<header class="top"><div class="bar">
+    <a class="brand" href="{{ path('app_dashboard') }}">🎫 DevDesk</a>
+    {% if app.user %}
+        <a href="{{ path('app_ticket_index') }}">Tickets</a>
+        <a href="{{ path('app_ticket_new') }}">New ticket</a>
+        <a href="{{ path('app_account') }}">{{ app.user.name }}</a>
+        <a href="{{ path('app_logout') }}">Sign out</a>
+    {% else %}
+        <a href="{{ path('app_login') }}">Sign in</a>
+        <a href="{{ path('app_register') }}">Register</a>
+    {% endif %}
+</div></header>
+<main>
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}<div class="flash {{ type }}" role="status">{{ message }}</div>{% endfor %}
+    {% endfor %}
+    {% block body %}{% endblock %}
+</main>
+</body>
+</html>

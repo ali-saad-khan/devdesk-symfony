@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Dashboard{% endblock %}
+{% block body %}
+<h1>Hello, {{ app.user.name }}</h1>
+<div class="stats">
+    {% for s in [['open','Open'],['in_progress','In progress'],['resolved','Resolved'],['closed','Closed']] %}
+        <a class="stat" href="{{ path('app_ticket_index', {status: s[0]}) }}" style="color:inherit;text-decoration:none"><b>{{ counts[s[0]]|default(0) }}</b><span class="muted">{{ s[1] }}</span></a>
+    {% endfor %}
+</div>
+<div class="card">
+    <h2>Recent activity</h2>
+    {% include 'ticket/_table.html.twig' with {tickets: recent} %}
+    <p><a class="btn" href="{{ path('app_ticket_new') }}">Open a ticket</a></p>
+</div>
+{% endblock %}

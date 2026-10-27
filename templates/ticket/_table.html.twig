@@ -1,0 +1,20 @@
+{% if tickets is empty %}
+    <p class="muted">No tickets yet.</p>
+{% else %}
+<table>
+    <thead><tr><th>#</th><th>Title</th><th>Status</th><th>Priority</th><th>Requester</th><th>Assignee</th><th>Updated</th></tr></thead>
+    <tbody>
+    {% for t in tickets %}
+        <tr>
+            <td>{{ t.id }}</td>
+            <td><a href="{{ path('app_ticket_show', {id: t.id}) }}">{{ t.title }}</a>{% if t.overdue %} <span class="badge overdue">SLA breached</span>{% endif %}</td>
+            <td><span class="badge {{ t.status.value }}">{{ t.status.label }}</span></td>
+            <td><span class="badge {{ t.priority.value }}">{{ t.priority.label }}</span></td>
+            <td>{{ t.requester.name }}</td>
+            <td>{{ t.assignee ? t.assignee.name : '—' }}</td>
+            <td class="muted">{{ t.updatedAt|date('d M H:i') }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}

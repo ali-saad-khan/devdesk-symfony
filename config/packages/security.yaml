@@ -1,0 +1,59 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    role_hierarchy:
+        ROLE_AGENT: ROLE_USER
+        ROLE_ADMIN: ROLE_AGENT
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler(/|$)|(_wdt|assets|build)/)
+            security: false
+
+        api:
+            pattern: ^/api
+            stateless: true
+            provider: app_user_provider
+            access_token:
+                token_handler: App\Security\ApiTokenHandler
+
+        main:
+            lazy: true
+            provider: app_user_provider
+            user_checker: App\Security\VerifiedUserChecker
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+            logout:
+                path: app_logout
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+
+    access_control:
+        - { path: ^/(login|register|verify)(/|$), roles: PUBLIC_ACCESS }
+        - { path: ^/health$, roles: PUBLIC_ACCESS }
+        - { path: ^/cron/, roles: PUBLIC_ACCESS } # guarded by a bearer secret in the controller
+        - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/, roles: ROLE_USER }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

@@ -1,0 +1,15 @@
+{
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.8.0",
+      "excludeFiles": "{tests/**,docker/**,.github/**,docs/**,var/**}"
+    }
+  },
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/api/index.php" }
+  ],
+  "crons": [
+    { "path": "/cron/sla", "schedule": "0 6 * * *" }
+  ]
+}

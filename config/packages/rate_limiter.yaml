@@ -1,0 +1,10 @@
+framework:
+    rate_limiter:
+        registration:
+            policy: sliding_window
+            limit: 5
+            interval: '1 hour'
+        api:
+            policy: sliding_window
+            limit: 60
+            interval: '1 minute'

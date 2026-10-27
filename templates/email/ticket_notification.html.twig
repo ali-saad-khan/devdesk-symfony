@@ -1,0 +1,7 @@
+<p>Hi {{ agent.name }},</p>
+{% if kind == 'sla_breached' %}
+<p>Ticket <b>#{{ ticket.id }} {{ ticket.title }}</b> ({{ ticket.priority.label }}) has not had a first reply in time.</p>
+{% else %}
+<p>A new ticket was opened by {{ ticket.requester.name }}: <b>#{{ ticket.id }} {{ ticket.title }}</b> ({{ ticket.priority.label }}).</p>
+{% endif %}
+<p><a href="{{ url('app_ticket_show', {id: ticket.id}) }}">Open the ticket</a></p>

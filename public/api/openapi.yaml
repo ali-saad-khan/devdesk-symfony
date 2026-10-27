@@ -1,0 +1,83 @@
+openapi: 3.0.3
+info:
+  title: DevDesk API
+  version: 1.0.0
+  description: Ticket API for DevDesk. Create a token on the Account page and send it as a Bearer token.
+servers:
+  - url: /
+security:
+  - bearerAuth: []
+paths:
+  /api/tickets:
+    get:
+      summary: List tickets visible to the caller
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string, enum: [open, in_progress, resolved, closed] }
+      responses:
+        '200':
+          description: Tickets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count: { type: integer }
+                  data: { type: array, items: { $ref: '#/components/schemas/Ticket' } }
+        '401': { description: Missing or invalid token }
+        '429': { description: Rate limit exceeded (60 requests/minute) }
+    post:
+      summary: Open a ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewTicket' }
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ticket' }
+        '422': { description: Validation failed }
+  /api/tickets/{id}:
+    get:
+      summary: Get one ticket
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Ticket
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ticket' }
+        '403': { description: Not your ticket }
+        '404': { description: Not found }
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer }
+  schemas:
+    NewTicket:
+      type: object
+      required: [title, description]
+      properties:
+        title: { type: string, minLength: 5, maxLength: 200 }
+        description: { type: string, minLength: 10, maxLength: 10000 }
+        priority: { type: string, enum: [low, normal, high, urgent], default: normal }
+    Ticket:
+      type: object
+      properties:
+        id: { type: integer }
+        title: { type: string }
+        description: { type: string }
+        status: { type: string, enum: [open, in_progress, resolved, closed] }
+        priority: { type: string, enum: [low, normal, high, urgent] }
+        requester: { type: string }
+        assignee: { type: string, nullable: true }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        responseDueAt: { type: string, format: date-time, nullable: true }
+        slaBreached: { type: boolean }

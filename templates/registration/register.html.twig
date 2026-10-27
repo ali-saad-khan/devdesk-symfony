@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Register{% endblock %}
+{% block body %}
+<div class="card" style="max-width:480px;margin:2rem auto">
+    <h1>Create your account</h1>
+    {{ form_start(form) }}
+        {% for field in [form.name, form.email, form.plainPassword.first, form.plainPassword.second] %}
+            <div class="row">{{ form_label(field) }}{{ form_widget(field) }}<div class="form-error">{{ form_errors(field) }}</div></div>
+        {% endfor %}
+        {{ form_rest(form) }}
+        <button type="submit">Register</button>
+    {{ form_end(form) }}
+    <p class="muted">Already registered? <a href="{{ path('app_login') }}">Sign in</a></p>
+</div>
+{% endblock %}
