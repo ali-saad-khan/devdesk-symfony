@@ -1,4 +1,6 @@
 {
+    "name": "ali-saad-khan/devdesk",
+    "description": "DevDesk: a production-ready helpdesk and ticketing app built with Symfony 7.4",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
