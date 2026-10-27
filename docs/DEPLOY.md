@@ -10,6 +10,7 @@
 | `MAILER_DSN` | yes | SMTP/provider DSN; `null://null` discards mail |
 | `DEFAULT_URI` | yes | public base URL, used in emails |
 | `MESSENGER_TRANSPORT_DSN` | on Vercel | `sync://` (no worker available) |
+| `TRUSTED_PROXIES` | on Vercel | `REMOTE_ADDR`. Needed so Symfony sees `https` behind the proxy (CSRF and redirects break otherwise). Leave unset on hosts with no trusted proxy |
 | `CRON_SECRET` | for SLA cron | Vercel sends it as `Authorization: Bearer …` |
 | `REQUIRE_EMAIL_VERIFICATION` | optional | `0` only for demos without a mail provider |
 | `MAIL_FROM` | optional | sender address |
@@ -22,7 +23,7 @@ Vercel has no official PHP runtime. This project uses the community runtime
 
 1. Create a free PostgreSQL database (Neon, Supabase, …) and copy its connection string.
 2. `npm i -g vercel && vercel login && vercel link` from the project root.
-3. Add the environment variables above (`vercel env add …`), including `APP_ENV=prod` and `MESSENGER_TRANSPORT_DSN=sync://`.
+3. Add the environment variables above (`vercel env add …`), including `APP_ENV=prod`, `TRUSTED_PROXIES=REMOTE_ADDR` and `MESSENGER_TRANSPORT_DSN=sync://`.
 4. Run migrations once from your machine against that database:
    `DATABASE_URL=… APP_ENV=prod php bin/console doctrine:migrations:migrate -n`
 5. (Optional demo data) `DATABASE_URL=… php bin/console doctrine:fixtures:load -n --env=dev`. Demo accounts only.

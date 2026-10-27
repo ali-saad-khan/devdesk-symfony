@@ -5,7 +5,7 @@ Customers open tickets, agents work them, admins oversee everything. Built as a 
 reference project: real access control, tests, static analysis, CI, a hardened container image, and a
 serverless deployment path.
 
-> **Live demo:** _add your Vercel URL here after deploying_ · demo logins are in [docs/DEPLOY.md](docs/DEPLOY.md)
+> **Live demo:** https://devdesk-symfony.vercel.app · sign in as `customer@devdesk.test`, `agent@devdesk.test` or `admin@devdesk.test` (password `devdesk-demo-2026`). It's a demo database: don't enter real data.
 
 ## What it demonstrates
 

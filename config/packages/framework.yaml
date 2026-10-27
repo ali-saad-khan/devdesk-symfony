@@ -2,6 +2,11 @@
 framework:
     secret: '%env(APP_SECRET)%'
 
+    # Set TRUSTED_PROXIES only when a reverse proxy you control sits in front (e.g. REMOTE_ADDR on Vercel,
+    # where every request arrives via Vercel's edge). Left empty, forwarded headers are ignored.
+    trusted_proxies: '%env(default::TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']
+
     # Note that the session will be started ONLY if you read or write from it.
     session:
         handler_id: App\Service\DatabaseSessionHandler
