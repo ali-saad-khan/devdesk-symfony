@@ -18,7 +18,7 @@ serverless deployment path.
 | **API** | Token-authenticated REST API with request DTO validation (`#[MapRequestPayload]`), explicit response shape, per-user rate limiting, OpenAPI spec at `public/api/openapi.yaml` |
 | **Async** | Symfony Messenger (Doctrine transport) for email notifications, with retries and a failure transport |
 | **Quality** | PHPUnit unit and functional tests (DB rolled back per test via DAMA), PHPStan **level 8**, PHP-CS-Fixer, `composer audit`, GitHub Actions CI |
-| **Operations** | `/health` endpoint, structured JSON logs to stderr in prod, env-driven config, multi-stage Dockerfile (FrankenPHP, non-root, opcache, pre-warmed cache, healthcheck), DB-backed sessions for stateless hosting |
+| **Operations** | `/health` endpoint, structured JSON logs to stderr in prod, env-driven config, multi-stage Dockerfile (`docker/Dockerfile.prod`, FrankenPHP, non-root, opcache, pre-warmed cache, healthcheck), DB-backed sessions for stateless hosting |
 
 ## Quick start (Docker)
 

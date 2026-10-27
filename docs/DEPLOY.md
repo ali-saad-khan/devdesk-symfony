@@ -35,9 +35,11 @@ no worker (sync messenger + a daily Vercel Cron on `/cron/sla`; Hobby plans allo
 ## Docker
 
 ```bash
-docker build -t devdesk .
+docker build -f docker/Dockerfile.prod -t devdesk .
 docker run -p 8080:8080 -e APP_SECRET=… -e DATABASE_URL=… -e MAILER_DSN=… -e DEFAULT_URI=https://desk.example.com devdesk
 ```
+
+(The production Dockerfile lives in `docker/` on purpose: a root-level `Dockerfile` makes Vercel build a container instead of using the PHP runtime.)
 
 The image runs as a non-root user, has a healthcheck on `/health`, and ships with a pre-warmed prod cache.
 Run `bin/console doctrine:migrations:migrate -n` as a release step, and a separate container with
